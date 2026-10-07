@@ -182,7 +182,3 @@ Checks cover form rendering, feature order, input validation, saved-model predic
 ## Contributing
 
 Create a branch for your changes, run the relevant checks and open a pull request for team review. Keep virtual environments and temporary files out of version control. Follow the team's agreed policy for storing trained model artifacts.
-
-## License
-
-This repository includes an MIT License. See [LICENSE](LICENSE) for the terms and existing attribution.
