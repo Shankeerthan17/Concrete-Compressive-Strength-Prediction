@@ -1,0 +1,51 @@
+{
+  "test_rows": 183,
+  "total_rows": 911,
+  "test_size": 0.2,
+  "random_state": 42,
+  "data_sha256": "88be18a0d6b4ce57b12297a4b08c9e38e0a197ac88ffa5eb4c62a19a8c5d4bcc",
+  "models": {
+    "random_forest": {
+      "label": "Random Forest",
+      "MAE": 3.056739973413229,
+      "RMSE": 4.196018079873549,
+      "R2": 0.9325049443439503,
+      "model_sha256": "4c43f9a21b14d35b8aeb31b50afab15658a5a425c2db00ca1b6a6d3f14ed7c59"
+    },
+    "linear_regression": {
+      "label": "Linear Regression (PCA)",
+      "MAE": 6.009991707506051,
+      "RMSE": 7.72754622752696,
+      "R2": 0.7710817160175979,
+      "model_sha256": "43162922add877adcaf59319176f8b22d72cc6fc9c62aac1456bf07ab947ae93"
+    },
+    "decision_tree": {
+      "label": "Decision Tree",
+      "MAE": 4.643178506375227,
+      "RMSE": 6.70323321497207,
+      "R2": 0.8277473480470865,
+      "model_sha256": "2fe113d8c5454b41f546127189361560315af26452a06a40e7098890f08da01c"
+    },
+    "gradient_boosting": {
+      "label": "Gradient Boosting",
+      "MAE": 3.5424008421466673,
+      "RMSE": 4.775994778185616,
+      "R2": 0.9125570209946443,
+      "model_sha256": "931871e1b109c46b80617b105293d3146ae55a71a15fd7043111de3e0ea78cb8"
+    },
+    "xgboost": {
+      "label": "XGBoost",
+      "MAE": 4.227813665358747,
+      "RMSE": 5.546451602770794,
+      "R2": 0.8820690726299855,
+      "model_sha256": "9204dfb5c5ed6645cd72003f4642ca19754bd0612c11c9902a1809e3e588ecdc"
+    },
+    "neural_network": {
+      "label": "Neural Network",
+      "MAE": 3.2077777191291577,
+      "RMSE": 4.724861243158439,
+      "R2": 0.9144193903326805,
+      "model_sha256": "7f2c5a9cfb0f6cb81c3aeeb755bfe99bc9733d3b881f9b2c2d28492f0cad1863"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+numpy
+pandas
+matplotlib
+seaborn
+scikit-learn==1.8.0
+joblib
+jupyter
+pytest
+xgboost==3.4.1
+Flask
+
+python app.py

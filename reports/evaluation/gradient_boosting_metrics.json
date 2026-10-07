@@ -1,0 +1,20 @@
+{
+  "model": "Gradient Boosting Regressor",
+  "features": [
+    "cement",
+    "blast_furnace_slag",
+    "fly_ash",
+    "water",
+    "superplasticizer",
+    "coarse_aggregate",
+    "fine_aggregate",
+    "age"
+  ],
+  "target": "compressive_strength",
+  "test_metrics": {
+    "r2": 0.9125497501821505,
+    "mae": 3.5442144351596494,
+    "rmse": 4.776193334096464
+  },
+  "model_file": "models/trained/gradient_boosting_model.joblib"
+}

@@ -1,0 +1,19 @@
+{
+  "model_name": "neural_network_model",
+  "features": [
+    "cement",
+    "blast_furnace_slag",
+    "fly_ash",
+    "water",
+    "superplasticizer",
+    "coarse_aggregate",
+    "fine_aggregate",
+    "age"
+  ],
+  "target": "compressive_strength",
+  "r2": 0.9013053281931078,
+  "mae": 3.33498339401488,
+  "rmse": 5.073973848604125,
+  "model_path": "D:\\My Projects\\Concrete-Compressive-Strength-Predictor\\models\\trained\\neural_network_model.joblib",
+  "scaler_path": "D:\\My Projects\\Concrete-Compressive-Strength-Predictor\\models\\preprocessing\\neural_network_scaler.joblib"
+}

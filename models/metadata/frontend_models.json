@@ -1,0 +1,49 @@
+{
+  "feature_columns": [
+    "cement",
+    "blast_furnace_slag",
+    "fly_ash",
+    "water",
+    "superplasticizer",
+    "coarse_aggregate",
+    "fine_aggregate",
+    "age"
+  ],
+  "train_rows": 728,
+  "test_rows": 183,
+  "linear_best_parameters": {
+    "model__fit_intercept": true
+  },
+  "versions": {
+    "sklearn": "1.8.0",
+    "xgboost": "3.4.1"
+  },
+  "test_metrics": {
+    "linear_regression_pca_pipeline": {
+      "MAE": 6.009991707506051,
+      "RMSE": 7.72754622752696,
+      "R2": 0.7710817160175979
+    },
+    "decision_tree": {
+      "MAE": 4.643178506375227,
+      "RMSE": 6.70323321497207,
+      "R2": 0.8277473480470865
+    },
+    "gradient_boosting": {
+      "MAE": 3.5424008421466673,
+      "RMSE": 4.775994778185616,
+      "R2": 0.9125570209946443
+    },
+    "xgboost": {
+      "MAE": 4.227813665358747,
+      "RMSE": 5.546451602770794,
+      "R2": 0.8820690726299855
+    },
+    "neural_network": {
+      "MAE": 3.2077777191291577,
+      "RMSE": 4.724861243158439,
+      "R2": 0.9144193903326805
+    }
+  },
+  "note": "Other models newly trained; original Random Forest preserved. Neural Network uses a fitted StandardScaler pipeline."
+}

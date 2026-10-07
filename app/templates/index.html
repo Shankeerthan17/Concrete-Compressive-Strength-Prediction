@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="Predict concrete compressive strength using machine learning mix regression models. Google-themed modern civil engineering tool.">
+  <title>Concrete Strength Predictor — Google Minimalist Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!-- ⚡ Apply saved theme instantly before first paint — prevents white flash -->
+  <script>
+    (function () {
+      var t = localStorage.getItem('cs_theme');
+      if (t === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <!-- Google Style Top Bar -->
+  <header>
+    <div class="navbar">
+      <a href="/" class="brand">
+        <div class="brand-text">
+          <h1>Concrete Compressive Strength Predictor</h1>
+          <p>High-Precision ML Regression Engine</p>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <div class="model-badge" title="Trained Model Type">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.38-1 1.72V7h2a3 3 0 0 1 3 3v2h1.28c.34-.6.98-1 1.72-1a2 2 0 1 1 0 4c-.74 0-1.38-.4-1.72-1H18v2a3 3 0 0 1-3 3h-2v1.28c.6.34 1 .98 1 1.72a2 2 0 1 1-4 0c0-.74.4-1.38 1-1.72V19H9a3 3 0 0 1-3-3v-2H4.72c-.34.6-.98 1-1.72 1a2 2 0 1 1 0-4c.74 0 1.38.4 1.72 1H6v-2a3 3 0 0 1 3-3h2V5.72c-.6-.34-1-.98-1-1.72a2 2 0 0 1 2-2z" />
+          </svg>
+          <span>Model: {{ model_type|default('Random Forest Regressor') }}</span>
+        </div>
+        <button type="button" class="theme-btn" id="theme-toggle" title="Switch to dark theme"
+          aria-label="Toggle theme">
+          <!-- Moon Icon (displayed in light mode) -->
+          <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
+          </svg>
+          <!-- Sun Icon (displayed in dark mode) -->
+          <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Header (compact) -->
+    <section class="hero">
+      <h2 class="hero-title">Predict compressive strength</h2>
+    </section>
+
+    <!-- Main Dual Panel Grid -->
+    <div class="dashboard-grid">
+      <!-- Left Column: Form -->
+      <section class="card" aria-labelledby="form-heading">
+        <div class="card-header">
+          <div>
+            <h3 id="form-heading" class="card-title">Mix Batch Parameters</h3>
+            <p class="card-subtitle">Values quantified per 1.0 m³ of mixed concrete</p>
+          </div>
+          <button type="button" class="btn btn-secondary" id="btn-clear" style="padding: 6px 14px; font-size: 0.8rem;">
+            Clear All
+          </button>
+        </div>
+
+        <form method="post" id="prediction-form">
+          <div class="form-group model-selector">
+            <label for="model">Prediction model</label>
+            <select id="model" name="model">
+              {% for key, option in model_options.items() %}
+              <option value="{{ key }}" {{ 'selected' if selected_model == key else '' }}>{{ option[0] }}</option>
+              {% endfor %}
+            </select>
+            {% if errors.get('model') %}<p class="error" role="alert">{{ errors['model'] }}</p>{% endif %}
+          </div>
+          <div class="fields">
+            {% for feature in features %}
+            <div class="form-group">
+              <div class="field-label-wrapper">
+                <label for="{{ feature.name }}">{{ feature.label }}</label>
+                <span class="unit-pill">{{ feature.unit }}</span>
+              </div>
+              <div class="input-wrapper">
+                <input id="{{ feature.name }}" name="{{ feature.name }}" type="number" step="any"
+                  min="{{ 1 if feature.name == 'age' else 0 }}" value="{{ values.get(feature.name, '') }}" required
+                  placeholder="0.0" aria-invalid="{{ 'true' if feature.name in errors else 'false' }}">
+              </div>
+              {% if feature.name in errors %}
+              <p class="error" role="alert">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                </svg>
+                {{ errors[feature.name] }}
+              </p>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Dynamic Live Mix Ratio Calculations -->
+          <div class="mix-analytics" id="live-mix-analytics" title="Computed automatically from active input fields">
+            <div class="metric-item">
+              <span class="metric-label">w/b ratio</span>
+              <span class="metric-value" id="calc-wb">—</span>
+              <span class="metric-hint">Target: 0.35–0.55</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Total Binder</span>
+              <span class="metric-value" id="calc-binder">—</span>
+              <span class="metric-hint">Cement + Slag + Ash</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Aggregates</span>
+              <span class="metric-value" id="calc-aggregate">—</span>
+              <span class="metric-hint">Coarse + Fine</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Est. Density</span>
+              <span class="metric-value" id="calc-density">—</span>
+              <span class="metric-hint">kg/m³ total</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="btn-submit">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm6-10H6V6h12v1z" />
+              </svg>
+              Estimate strength
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Right Column: Results & Classification -->
+      <aside class="result-panel">
+        <section class="result-card result" id="prediction-result-card" aria-live="polite">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Estimated Compressive Strength</h3>
+              <p class="card-subtitle">Calculated strength for cured concrete batch</p>
+            </div>
+          </div>
+
+          <div class="result-val-row">
+            <strong id="prediction-result-val">
+              {% if prediction is not none %}
+              ≈ {{ "%.2f"|format(prediction) }} MPa
+              {% else %}
+              ≈ 0 MPa
+              {% endif %}
+            </strong>
+          </div>
+
+          <div class="result-val-secondary" id="prediction-exact-val" title="Exact unrounded prediction value">
+            {% if prediction is not none %}
+            {{ prediction }} MPa
+            {% else %}
+            0.00 MPa
+            {% endif %}
+          </div>
+
+          <!-- Gauge Scale Indicator -->
+          <div class="meter-container">
+            <div class="meter-labels">
+              <span>0 MPa</span>
+              <span>50 MPa</span>
+              <span>100+ MPa</span>
+            </div>
+            <div class="meter-track"
+              title="{% if prediction is not none %}{{ '%.2f'|format(prediction) }} MPa on 0-100 MPa scale{% else %}0 MPa{% endif %}">
+              {% set meter_percent = [([prediction or 0, 100]|min), 0]|max %}
+              <div class="meter-fill" id="prediction-meter-fill" style="width: {{ meter_percent }}%;"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reference Ranges Card -->
+        <section class="result-card reference-card" aria-label="Typical Feature Ranges">
+          <div class="reference-card-header">
+            <div class="reference-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="reference-title">Typical Feature Ranges</h4>
+              <p class="reference-subtitle">Standard dataset baseline intervals</p>
+            </div>
+          </div>
+
+          <div class="reference-table-wrapper">
+            <table class="reference-table">
+              <thead>
+                <tr>
+                  <th scope="col">Feature</th>
+                  <th scope="col" style="text-align: right;">Typical Range</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <span class="ref-feature-name">Cement</span>
+                    <span class="ref-feature-unit">kg/m³</span>
+                  </td>
+                  <td class="ref-range-val">~100–550</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="ref-feature-name">Blast furnace slag</span>
+                    <span class="ref-feature-unit">kg/m³</span>
+                  </td>
+                  <td class="ref-range-val">~0–360</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="ref-feature-name">Fly ash</span>
+                    <span class="ref-feature-unit">kg/m³</span>
+                  </td>
+                  <td class="ref-range-val">~0–200</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="ref-feature-name">Water</span>
+                    <span class="ref-feature-unit">kg/m³</span>
+                  </td>
+                  <td class="ref-range-val">~120–250</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="ref-feature-name">Superplasticizer</span>
+                    <span class="ref-feature-unit">kg/m³</span>
+                  </td>
+                  <td class="ref-range-val">~0–30</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="ref-feature-name">Coarse aggregate</span>
+                    <span class="ref-feature-unit">kg/m³</span>
+                  </td>
+                  <td class="ref-range-val">~800–1150</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="ref-feature-name">Fine aggregate</span>
+                    <span class="ref-feature-unit">kg/m³</span>
+                  </td>
+                  <td class="ref-range-val">~600–1000</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="ref-feature-name">Age</span>
+                    <span class="ref-feature-unit">days</span>
+                  </td>
+                  <td class="ref-range-val">~1–365</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </aside>
+    </div>
+    <section class="card evaluation-card" aria-labelledby="evaluation-heading">
+      <h3 id="evaluation-heading" class="card-title">Model evaluation</h3>
+      <p class="card-subtitle">Saved-model scores on the same {{ evaluation.get('test_rows', '—') }} test observations
+        (80/20 split, random state 42). These describe dataset performance, not the error of your individual prediction.</p>
+      {% if evaluation.models %}
+      <h4 id="evaluation-model-label">{{ model_options[selected_model][0] }}</h4>
+      {% set scores = evaluation.models.get(selected_model) %}
+      <div class="evaluation-summary" aria-live="polite">
+        <div><span>MAE · MPa</span><strong id="metric-mae">{{ '%.2f'|format(scores.MAE) if scores else '—' }}</strong></div>
+        <div><span>RMSE · MPa</span><strong id="metric-rmse">{{ '%.2f'|format(scores.RMSE) if scores else '—' }}</strong></div>
+        <div><span>R²</span><strong id="metric-r2">{{ '%.4f'|format(scores.R2) if scores else '—' }}</strong></div>
+      </div>
+      <p class="card-subtitle">Lower MAE and RMSE are better. Higher R² is better; R² is not percentage accuracy.</p>
+      <div class="evaluation-table-wrapper">
+        <table class="evaluation-table">
+          <caption>All models on the same test dataset</caption>
+          <thead><tr><th scope="col">Model</th><th scope="col">MAE (MPa)</th><th scope="col">RMSE (MPa)</th><th scope="col">R²</th></tr></thead>
+          <tbody>{% for key, option in model_options.items() %}
+            {% set item = evaluation.models.get(key) %}
+            <tr data-evaluation-model="{{ key }}" class="{{ 'selected-metric-row' if key == selected_model else '' }}">
+              <th scope="row">{{ option[0] }}</th>
+              <td>{{ '%.2f'|format(item.MAE) if item else '—' }}</td>
+              <td>{{ '%.2f'|format(item.RMSE) if item else '—' }}</td>
+              <td>{{ '%.4f'|format(item.R2) if item else '—' }}</td>
+            </tr>{% endfor %}</tbody>
+        </table>
+      </div>
+      <p class="card-subtitle">The existing workflow also used this split during model comparison, so these scores are comparison results rather than an independent final validation.</p>
+      {% else %}
+      <p>Evaluation metrics are unavailable. Run <code>python scripts/evaluate_model.py</code>, then restart the app.</p>
+      {% endif %}
+    </section>
+    <script id="evaluation-data" type="application/json">{{ evaluation.models|tojson }}</script>
+  </main>
+
+  <!-- Google-style Minimal Footer -->
+  <footer>
+    <p>Concrete Compressive Strength Predictor • Machine Learning Regression Model • Developed by Pathum Lakshan Bandara
+    </p>
+  </footer>
+
+  <!-- Toast Notification Element -->
+  <div id="toast" class="toast" role="status" aria-live="polite">Copied to clipboard</div>
+
+  <!-- External Script -->
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</body>
+
+</html>

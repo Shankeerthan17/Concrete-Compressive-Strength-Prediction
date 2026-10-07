@@ -1,0 +1,8 @@
+{
+  "best_model": "gradient_boosting",
+  "best_dataset": "baseline",
+  "r2": 0.9139370802241114,
+  "mae": 3.4645351822170043,
+  "rmse": 4.7381565831558214,
+  "model_file": "d:\\My Projects\\Concrete-Compressive-Strength-Predictor\\models\\trained\\gradient_boosting_baseline.joblib"
+}

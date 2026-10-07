@@ -1,0 +1,8 @@
+{
+  "model": "MLPRegressor",
+  "r2": 0.6143609269078201,
+  "mae": 8.027786484471427,
+  "rmse": 10.02979106400242,
+  "model_file": "d:\\My Projects\\Concrete-Compressive-Strength-Predictor\\models\\trained\\neural_network.joblib",
+  "scaler_file": "d:\\My Projects\\Concrete-Compressive-Strength-Predictor\\models\\preprocessing\\neural_network_scaler.joblib"
+}
